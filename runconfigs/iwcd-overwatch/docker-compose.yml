@@ -1,0 +1,17 @@
+services:
+  git-wrapper:
+    container_name: iwcd-overwatch
+    hostname: iwcd-overwatch
+    build:
+      context: ./build
+      args:
+        - __user_home=/h
+      dockerfile: Dockerfile
+    volumes:
+      - ../../:/h/o
+      - ./local/.ssh:/h/.ssh
+      - ./scripts:/h/s
+    environment:
+      - GIT_USER_NAME
+      - GIT_USER_MAIL
+    command: ["sleep", "infinity"]
