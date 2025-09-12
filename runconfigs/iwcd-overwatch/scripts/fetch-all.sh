@@ -40,8 +40,10 @@ setup_git_config() {
     # Set up commit signing and repo config
     local pub_key="${OVW_PUB_KEY:-$HOME/.ssh/id_rsa.pub}"
     local prv_key="${OVW_PRV_KEY:-$HOME/.ssh/id_rsa}"
+    local signers_file="${OVN_SIGNERS_FILE:-$HOME/.ssh/allowed_signers}"
     git config commit.gpgSign true
     git config user.signingkey "$pub_key"
+    git config gpg.ssh.allowedSignersFile "${signers_file}"
     # Optionally, set GPG program to ssh-keygen if using SSH keys for signing (advanced, may require extra setup)
     # git config gpg.program "ssh-keygen"
     git config core.eol lf
