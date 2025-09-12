@@ -37,6 +37,16 @@ setup_git_config() {
     # Configure local git user based on host wrapper
     git config user.name "${GIT_USER_NAME}"
     git config user.email "${GIT_USER_MAIL}"
+    # Set up commit signing and repo config
+    local pub_key="${OVW_PUB_KEY:-$HOME/.ssh/id_rsa.pub}"
+    local prv_key="${OVW_PRV_KEY:-$HOME/.ssh/id_rsa}"
+    git config commit.gpgSign true
+    git config user.signingkey "$prv_key"
+    # Optionally, set GPG program to ssh-keygen if using SSH keys for signing (advanced, may require extra setup)
+    # git config gpg.program "ssh-keygen"
+    git config core.eol lf
+    git config core.autocrlf input
+    git config core.fileMode false
     log "Git config set for $repo_dir"
 }
 
@@ -173,7 +183,9 @@ fetch_repository() {
         cd "$relative_folder"
         
         if git clone "$url" "$repo_name"; then
+
             log "Successfully cloned $repo_name"
+
             
             # Setup git config for the newly cloned repository
             setup_git_config "$repo_path"

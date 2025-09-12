@@ -35,5 +35,9 @@ HEALTHCHECK CMD exit 0
 USER ${__uname}
 
 WORKDIR "${__user_home}"
+RUN git config --global commit.gpgsign true \
+  && git config --global gpg.format ssh \
+  && git config --global core.eol lf \
+  && git config --global core.autocrlf input
 
 VOLUME [ "${__user_home}/o", "${__user_home}/.ssh", "${__user_home}/s" ]
