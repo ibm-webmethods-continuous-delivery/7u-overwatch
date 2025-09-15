@@ -5,13 +5,17 @@ services:
     build:
       context: ./build
       args:
-        - __user_home=/h
+        - __user_home=${OVW_USER_HOME}
       dockerfile: Dockerfile
     volumes:
-      - ../../:/h/o
-      - ./local/.ssh:/h/.ssh
-      - ./scripts:/h/s
+      - ../../:${OVW_USER_HOME}/o
+      - ./local/.ssh:${OVW_USER_HOME}/.ssh
+      - ./scripts:${OVW_USER_HOME}/s
     environment:
       - GIT_USER_NAME
       - GIT_USER_MAIL
+      - OVW_USER_HOME
+      - OVW_PUB_KEY
+      - OVW_PRV_KEY
+      - OVN_SIGNERS_FILE
     command: ["sleep", "infinity"]

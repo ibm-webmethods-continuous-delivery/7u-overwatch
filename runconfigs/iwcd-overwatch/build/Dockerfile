@@ -1,3 +1,8 @@
+#
+# Copyright IBM Corp. 2025 - 2025
+# SPDX-License-Identifier: Apache-2.0
+#
+
 ARG __alpine_version=3.22.0
 FROM alpine:${__alpine_version}
 
@@ -27,7 +32,7 @@ RUN apk update --no-cache \
     && addgroup -g ${__gid} ${__gname} \
     && adduser -u ${__uid} -G ${__gname} -D -h ${__user_home} ${__uname} \
     && mkdir "${__user_home}/o" "${__user_home}/.ssh" "${__user_home}/s" \
-    && chown ${__uid}:${__gid} "${__user_home}/o" "${__user_home}/.ssh" "${__user_home}/s"
+    && chown ${__uid}:${__gid} "${__user_home}" "${__user_home}/o" "${__user_home}/.ssh" "${__user_home}/s"
 
 # minimal healthcheck, we do not really need it here
 HEALTHCHECK CMD exit 0
@@ -38,6 +43,9 @@ WORKDIR "${__user_home}"
 RUN git config --global commit.gpgsign true \
   && git config --global gpg.format ssh \
   && git config --global core.eol lf \
-  && git config --global core.autocrlf input
+  && git config --global core.autocrlf input \
+  && echo 'alias scommit="git commit -s"' >> "${__user_home}/.profile"
+  ## Note - to load the .profile start the shell with -l option
+  ## docker exec -it <container> sh -l
 
-VOLUME [ "${__user_home}/o", "${__user_home}/.ssh", "${__user_home}/s" ]
+  VOLUME [ "${__user_home}/o", "${__user_home}/.ssh", "${__user_home}/s" ]

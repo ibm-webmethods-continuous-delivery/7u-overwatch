@@ -9,6 +9,9 @@
 # https://github.com/orgs/ibm-webmethods-continuous-delivery
 # This script reads repos.csv, soft synchronizes the local repositories and highlights local updates
 
+# we accept "local" keyword exception as this is only used in our arrangement here
+# shellcheck disable=SC3043
+
 set -e  # Exit on error
 
 # Get the directory where this script is located
@@ -26,6 +29,7 @@ log() {
 
 # Function to setup git user config for a repository
 setup_git_config() {
+    
     local repo_dir="$1"
     if [ ! -d "$repo_dir/.git" ]; then
         log "Warning: $repo_dir is not a git repository"
@@ -39,7 +43,7 @@ setup_git_config() {
     git config user.email "${GIT_USER_MAIL}"
     # Set up commit signing and repo config
     local pub_key="${OVW_PUB_KEY:-$HOME/.ssh/id_rsa.pub}"
-    local prv_key="${OVW_PRV_KEY:-$HOME/.ssh/id_rsa}"
+    #local prv_key="${OVW_PRV_KEY:-$HOME/.ssh/id_rsa}"
     local signers_file="${OVN_SIGNERS_FILE:-$HOME/.ssh/allowed_signers}"
     git config commit.gpgSign true
     git config user.signingkey "$pub_key"
@@ -80,18 +84,21 @@ check_local_changes() {
     fi
     
     # Check for unpushed commits
-    local current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
+    local current_branch
+    current_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo '')"
     if [ -n "$current_branch" ] && [ "$current_branch" != "HEAD" ]; then
         # Check if branch has upstream
         if git rev-parse --verify "@{upstream}" > /dev/null 2>&1; then
-            local unpushed_count="$(git rev-list --count "@{upstream}..HEAD" 2>/dev/null || echo '0')"
+            local unpushed_count
+            unpushed_count="$(git rev-list --count "@{upstream}..HEAD" 2>/dev/null || echo '0')"
             if [ "$unpushed_count" -gt 0 ]; then
                 status_output="${status_output}\n    - $unpushed_count unpushed commit(s) on branch '$current_branch'"
                 has_issues=1
             fi
         else
             # Branch has no upstream, check if it has any commits
-            local commit_count="$(git rev-list --count HEAD 2>/dev/null || echo '0')"
+            local commit_count
+            commit_count="$(git rev-list --count HEAD 2>/dev/null || echo '0')"
             if [ "$commit_count" -gt 0 ]; then
                 status_output="${status_output}\n    - Branch '$current_branch' has no upstream (${commit_count} local commit(s))"
                 has_issues=1

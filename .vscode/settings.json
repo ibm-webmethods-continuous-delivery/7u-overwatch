@@ -1,12 +1,16 @@
 {
   "cSpell.words": [
+    "addgroup",
     "adduser",
     "gname",
     "gpgsign",
+    "IWCD",
     "keygen",
     "mandoc",
     "overwatch",
+    "repostiories",
     "runconfigs",
+    "scommit",
     "shellcheck",
     "shunit",
     "signingkey",

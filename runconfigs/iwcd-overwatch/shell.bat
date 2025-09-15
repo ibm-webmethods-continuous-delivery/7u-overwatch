@@ -1,1 +1,1 @@
-docker exec -it iwcd-overwatch sh
+docker exec -it iwcd-overwatch sh -l
