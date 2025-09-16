@@ -44,6 +44,7 @@ RUN git config --global commit.gpgsign true \
   && git config --global gpg.format ssh \
   && git config --global core.eol lf \
   && git config --global core.autocrlf input \
+  && git config --global --add safe.directory "${__user_home}/o" \
   && echo 'alias scommit="git commit -s"' >> "${__user_home}/.profile"
   ## Note - to load the .profile start the shell with -l option
   ## docker exec -it <container> sh -l
