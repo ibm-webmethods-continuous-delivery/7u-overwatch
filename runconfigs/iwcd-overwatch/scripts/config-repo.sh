@@ -11,7 +11,9 @@ if [ ! -d "$repo_dir/.git" ]; then
     return 1
 fi
 # Add repository to git safe directories to avoid ownership issues
-git config --global --add safe.directory "$repo_dir"
+if ! git config --global --get-all safe.directory | grep -Fxq "$repo_dir"; then
+    git config --global --add safe.directory "$repo_dir"
+fi
 
 crtDir=$(pwd)
 cd "$repo_dir" || exit 2

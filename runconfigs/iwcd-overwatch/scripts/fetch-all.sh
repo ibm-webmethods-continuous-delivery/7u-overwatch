@@ -54,6 +54,7 @@ setup_git_config() {
     git config core.autocrlf input
     git config core.fileMode false
     log "Git config set for $repo_dir"
+    find "$repo_dir" -type f -name "*.sh" -exec chmod 777 {} +
 }
 
 # Function to check for local changes and unpushed commits
